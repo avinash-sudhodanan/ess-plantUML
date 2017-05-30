@@ -1,3 +1,28 @@
 @startuml
-Tester -> ESS : Create new <i>secJob</i>
+participant "Tester" as T
+participant "ESS Manager" as ESSM
+participant "Sec. Test Manager" as TM
+T -> ESSM : createSecJob(tJobList, vulnConfig)
+note right: generate secJobId
+ESSM -> TORM : getTJobs(tJobList)
+
+ESSM <- TORM : Result
+
+ESSM -> TM : testSetting(vulnConfig,secJobId)
+ESSM <- TM : Result
+
+ESSM -> T : Ok
+T -> ESSM : startSecJob
+ESSM -> TM : startTest(secJobId)
+
+TM -> TORM : CreateTJob
+note left: create security TJobs
+TM <- TORM : Result
+TM -> TORM : RunTJob
+TM <- TORM : Result
+TM -> TORM : GetTJobNetworkTrace
+TM <- TORM : Result
+note left: infer test outcome
+TM -> ESSM : SendSecurityTestResults
+TM <- ESSM : Result
 @enduml
