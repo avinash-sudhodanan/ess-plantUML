@@ -1,5 +1,5 @@
 @startuml
-secJob "1..*" - "0..*" tJob : contains >
+secJob "0..*" - "0..*" tJob : generate >
 secJob "0..*" -- "1" secJobExec : have >
 secJobExec "1" - "1..*" secJobExecResults : generate >
 @enduml
