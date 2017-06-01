@@ -5,11 +5,10 @@ participant "TORM" as TORM
 participant "Sec. Test Manager" as STM
 
 T -> ESSM : **1.** create secJob\n[tJobList, vulConfig]
-note right: generate\nsecJobId
-
 ESSM -> TORM : **2.** get tJobs\n[tJobList]
 note left: retreieve tJobs\nof tJobList
 ESSM <- TORM : **3.** result\n[tJob1]
+note left: generate\nsecJobId
 T <- ESSM : **4.** result\n[secJobId]
 T -> ESSM : **5.** execute secJob
 note right: create\nsecJobExecId
@@ -24,6 +23,6 @@ STM <- TORM : **12.** result\n[tJob1ExecId]
 STM -> TORM : **13.** get tJobTrace\n[tJob1ExecId]
 STM <- TORM : **14.** result\n[HTTP logs, Browser Logs]
 note right: infer test outcome\ne.g., using oracle
-STM -> ESSM : **15.** send secTestResults\n[secTestReport, secJobExecId]
-ESSM -> T : **16.** result\n[secTestReport]
+STM -> ESSM : **15.** send secJob execution results\n[secJobExecResult, secJobExecId]
+ESSM -> T : **16.** result\n[secJobExecResult]
 @enduml
