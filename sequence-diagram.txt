@@ -1,29 +1,29 @@
 @startuml
-participant "Tester" as T
-participant "TORM" as TORM
+actor Tester as T
 participant "ESS Manager" as ESSM
-participant "Sec. Test Manager" as TM
-T -> TORM : createSecJob(tJobList, vulnConfig)
-note right: "retreieve tJobs \n based on tJobList"
-ESSM <- TORM : startSecTest(tJobs, vulnConfig)
-note right: generate secJobId
+participant "TORM" as TORM
+participant "Sec. Test Manager" as STM
 
-ESSM -> TM : testSetting(vulnConfig,secJobId)
-ESSM <- TM : Result
+T -> ESSM : **1.** create secJob\n[tJobList, vulConfig]
+note right: generate\nsecJobId
 
-ESSM -> TORM : secJob created with secJobId
-T -> TORM : start SecJob
-TORM -> ESSM : startSecJob(secJobId)
-ESSM -> TM : startTest(secJobId)
-
-TM -> TORM : CreateTJob
-note right: create security TJobs
-TM <- TORM : Result
-TM -> TORM : RunTJob
-TM <- TORM : Result
-TM -> TORM : GetTJobNetworkTrace
-TM <- TORM : Result
-note right: infer test outcome
-TM -> TORM : SendSecurityTestResults
-TORM -> T : Test Result
+ESSM -> TORM : **2.** get tJobs\n[tJobList]
+note left: retreieve tJobs\nof tJobList
+ESSM <- TORM : **3.** result\n[tJob1]
+T <- ESSM : **4.** result\n[secJobId]
+T -> ESSM : **5.** execute secJob
+note right: create\nsecJobExecId
+ESSM -> STM : **6.** execute secJob\n[secJobId, secJobExecId, vulConfig]
+ESSM <- STM : **7.** get tJobs\n[secJobId]
+ESSM -> STM : **8.** result\n[tJob1]
+STM -> TORM : **9.** create tJob\n[tJob2]
+note right: create modified tJob\nfor security testing
+STM <- TORM : **10.** result\n[tJob1Id]
+STM -> TORM : **11.** execute tJob\n[tJob1]
+STM <- TORM : **12.** result\n[tJob1ExecId]
+STM -> TORM : **13.** get tJobTrace\n[tJob1ExecId]
+STM <- TORM : **14.** result\n[HTTP logs, Browser Logs]
+note right: infer test outcome\ne.g., using oracle
+STM -> ESSM : **15.** send secTestResults\n[secTestReport, secJobExecId]
+ESSM -> T : **16.** result\n[secTestReport]
 @enduml
