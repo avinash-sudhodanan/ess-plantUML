@@ -1,0 +1,38 @@
+@startuml
+skinparam sequence {
+    ActorBackgroundColor #EEEBDC
+    ParticipantBackgroundColor #EEEBDC
+}
+
+actor Tester as T
+participant TORM
+participant ESM
+participant "Resources" as Res
+participant "secJobExecution" as STM
+participant EIM
+participant EPM
+participant ESS
+participant SuT
+box "Orchestrated resources" 
+    participant Res
+    participant ESS
+
+end box
+autonumber
+T -> TORM : start ESS
+TORM -> ESM: create service of type ESS
+ESM --> TORM: service ID
+ESM -> EPM: request required resources
+create Res
+EPM -> Res: create required resources
+activate Res
+EPM --> ESM: Resource
+ESM -> Res: deploy software
+ESM -> Res: configure/provision software
+create ESS
+Res -> ESS: create ESS
+activate ESS
+
+TORM -> ESM: check for completion
+ESM --> TORM: created
+@enduml
