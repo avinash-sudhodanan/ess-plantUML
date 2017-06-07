@@ -1,0 +1,49 @@
+@startuml
+skinparam sequence {
+    ActorBackgroundColor #EEEBDC
+    ParticipantBackgroundColor #EEEBDC
+}
+
+actor Tester as T
+participant TORM
+participant ESM
+participant "Resource" as Res
+participant "secJobExecution" as STM
+participant EIM
+participant EPM
+participant ESS
+participant SuT
+box "Orchestrated resources" 
+    participant Res
+    participant ESS
+end box
+autonumber
+group ESS creation
+T -> TORM : request ESS
+TORM -> ESM: create service of type ESS
+ESM --> TORM: service ID
+ESM -> EPM: request required resources
+create Res
+EPM -> Res: create required resources
+activate Res
+EPM --> ESM: Resource
+ESM -> Res: deploy ESS software
+ESM -> Res: configure/provision ESS software
+create ESS
+Res -> ESS: create ESS
+activate ESS
+
+Res --> ESM: created ESS
+TORM -> ESM: check for completion
+ESM --> TORM: created
+end
+
+group SecJob creation
+T -> ESS : create secJob with [tJobList, vulConfig, oracle]
+ESS -> TORM : get tJobs with [tJobList]
+note right: retrieve tJobs\nof tJobList
+ESS <- TORM : result [tJob1]
+note right: generate\nsecJobId
+T <- ESS : secJob created\n[secJobId]
+end
+@enduml
