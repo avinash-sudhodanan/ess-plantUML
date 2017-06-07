@@ -42,8 +42,8 @@ group SecJob creation
 T -> ESS : create secJob with [tJobList, vulConfig, oracle]
 ESS -> TORM : get tJobs with [tJobList]
 note right: retrieve tJobs\nof tJobList
-ESS <- TORM : result [tJob1]
+ESS <-- TORM : result [tJob1]
 note right: generate\nsecJobId
-T <- ESS : secJob created\n[secJobId]
+T <-- ESS : secJob created with ID [secJobId]
 end
 @enduml
