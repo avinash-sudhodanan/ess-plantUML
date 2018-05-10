@@ -1,0 +1,20 @@
+@startuml
+actor Tester as T
+participant "ESS" as ESS
+participant "TORM" as TORM
+participant "Tjob" as Tjob
+participant "SuT" as SuT
+
+T -> TJob : **1.** Set HTTP proxy\n[ESS_MITM]
+TJob -> T : **2.** Status
+T -> ESS : **3.** Tjob details\n[TjobId]
+ESS -> TORM : **4.** Execute Tjob\n[TjobId]
+TORM -> Tjob : **5.** Execute\n[TjobId]
+Tjob -> ESS : **6.** Tjob's HTTP Requests
+ESS -> SuT : **7.** Tjob's HTTP Requests
+SuT -> ESS : **8.** Tjob's HTTP Responses
+ESS -> Tjob : **9.** Tjob's HTTP Responses
+ESS -> SuT : **10.** Security Test's HTTP Requests
+SuT -> ESS : **11.** Security Test's HTTP Responses
+ESS -> T : **12.** Test Report\n[Report]
+@enduml
